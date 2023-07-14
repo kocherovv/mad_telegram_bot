@@ -44,14 +44,18 @@ public class GptService {
             .build();
     }
 
-    public SendMessage comment(Long chatId, Integer updateId, String text) {
+    public SendMessage comment(Long chatId, Integer updateId, LinkedList<DialogMessage> dialog) {
+        var dialogMessages = dialog.stream().filter(e -> e.getChatId().equals(chatId)).toList();
+
         var commentCondition = BotCondition.builder()
             .after(commentAfter)
             .before(commentBefore)
             .build();
 
         var answer = chatGptController.chat(
-            commentCondition.getBefore() + text + commentCondition.getAfter());
+            commentCondition.getBefore() + dialogMessages + commentCondition.getAfter());
+
+        answer = checkSelfNaming(answer);
 
         return SendMessage.builder()
             .replyToMessageId(updateId)

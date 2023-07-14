@@ -43,7 +43,7 @@ public class BotService {
             return gptService.comment(
                 update.getMessage().getChat().getId(),
                 update.getMessage().getMessageId(),
-                update.getMessage().getText());
+                dialogContext);
         }
 
         System.out.println("ПРОПУСК");
