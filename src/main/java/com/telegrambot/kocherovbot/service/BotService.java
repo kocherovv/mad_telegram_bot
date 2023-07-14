@@ -1,7 +1,6 @@
-package com.telegrambot.kocherovbot.controller;
+package com.telegrambot.kocherovbot.service;
 
 import com.telegrambot.kocherovbot.domen.DialogMessage;
-import com.telegrambot.kocherovbot.service.GptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,11 +10,11 @@ import java.util.LinkedList;
 
 @Controller
 @RequiredArgsConstructor
-public class BotController {
+public class BotService {
     private final GptService gptService;
 
     public SendMessage handle(Update update, LinkedList<DialogMessage> dialogContext) {
-        if (update.getMessage() == null || update.getMessage().getText() == null) {
+        if (update == null || update.getMessage() == null || update.getMessage().getText() == null) {
             return null;
         }
 
@@ -29,14 +28,12 @@ public class BotController {
             return gptService.answerWithContext(
                 update.getMessage().getChat().getId(),
                 update.getMessage().getMessageId(),
-                update.getMessage().getText(),
                 dialogContext);
 
         } else if (update.getMessage().getText().contains("@KocherovBot")) {
             return gptService.answerWithContext(
                 update.getMessage().getChat().getId(),
                 update.getMessage().getMessageId(),
-                update.getMessage().getText(),
                 dialogContext);
 
         } else if (isFromPersonAndChanceTrue) {

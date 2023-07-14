@@ -1,17 +1,15 @@
 package com.telegrambot.kocherovbot.domen;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+@Builder
+public class GptMessage {
     private String role;
     private String content;
-
-    @Override
-    public String toString() {
-        return role + ": " + content + ";";
-    }
 }

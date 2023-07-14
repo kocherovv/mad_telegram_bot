@@ -9,7 +9,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
 @RequiredArgsConstructor
-public class TelegramBotsApiConf {
+public class TelegramBotsApiConfiguration {
     private final BotConfiguration botConfiguration;
 
     @Bean

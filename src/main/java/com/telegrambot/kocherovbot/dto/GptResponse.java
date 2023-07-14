@@ -1,6 +1,6 @@
 package com.telegrambot.kocherovbot.dto;
 
-import com.telegrambot.kocherovbot.domen.Message;
+import com.telegrambot.kocherovbot.domen.GptMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatResponse {
+@Builder
+public class GptResponse {
     private List<Choice> choices;
 
     @Data
@@ -20,6 +20,6 @@ public class ChatResponse {
     @NoArgsConstructor
     public static class Choice {
         private int index;
-        private Message message;
+        private GptMessage message;
     }
 }

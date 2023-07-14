@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class KocherovBotApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(KocherovBotApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(KocherovBotApplication.class, args);
+    }
 }

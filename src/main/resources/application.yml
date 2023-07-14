@@ -1,0 +1,19 @@
+logging:
+  level:
+    root: INFO
+  file:
+    name: example.log
+    path: /
+
+openai:
+  api:
+    url: https://api.openai.com/v1/chat/completions
+    key: ${OPENAI_KEY}
+  model: gpt-3.5-turbo
+  conditions:
+    answer:
+      before: "Ответь на последнее сообщение диалога как буд-то ты Mad Robot, и тебя все достали:"
+      after: ""
+    comment:
+      before: "Влезь в диалог как буд-то ты Mad Robot, пошути над последним сообщением: "
+      after: "\""
