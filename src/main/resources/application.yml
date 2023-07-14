@@ -11,6 +11,7 @@ openai:
     key: ${OPENAI_KEY}
   model: gpt-3.5-turbo
   conditions:
+    chance: 0.03
     answer:
       before: "Ответь на последнее сообщение диалога как буд-то ты Mad Robot, и тебя все достали:"
       after: ""
