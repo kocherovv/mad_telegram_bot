@@ -5,7 +5,6 @@ import com.telegrambot.kocherovbot.service.BotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Async;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -34,7 +33,6 @@ public class BotConfiguration extends TelegramLongPollingBot {
     }
 
     @Override
-    @Async
     public void onUpdateReceived(Update update) {
         addMessageToContext(
             update.getMessage().getChat().getId(),

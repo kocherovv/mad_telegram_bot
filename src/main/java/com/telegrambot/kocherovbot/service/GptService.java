@@ -69,6 +69,7 @@ public class GptService {
             answer = answer.replace("Mad Bot: ", "")
                 .replace(System.getenv("BOT_USERNAME") + ": ", "");
         }
+
         return answer;
     }
 }

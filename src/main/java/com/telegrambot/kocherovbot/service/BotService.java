@@ -2,6 +2,7 @@ package com.telegrambot.kocherovbot.service;
 
 import com.telegrambot.kocherovbot.domen.DialogMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class BotService {
     private final GptService gptService;
     @Value("${openai.conditions.chance}")
@@ -46,7 +48,7 @@ public class BotService {
                 dialogContext);
         }
 
-        System.out.println("ПРОПУСК");
+        log.info("ПРОПУСК");
         return null;
     }
 }
