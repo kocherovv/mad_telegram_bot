@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class BotConfiguration extends TelegramLongPollingBot {
     private final String botName = System.getenv("BOT_NAME");
     private final String botToken = System.getenv("BOT_TOKEN");
     private final BotService botService;
-    private final LinkedList<DialogMessage> dialogContext;
+    private final ArrayList<DialogMessage> dialogContext;
 
     @Override
     public String getBotUsername() {
@@ -34,17 +33,37 @@ public class BotConfiguration extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        addMessageToContext(
-            update.getMessage().getChat().getId(),
-            update.getMessage().getFrom().getFirstName() + " "
-                + update.getMessage().getFrom().getLastName(),
-            update.getMessage().getText()
-        );
-        var answer = botService.handle(update, dialogContext);
-        send(update, answer);
+        if (update.getCallbackQuery() != null) {
+            var message = botService.menuSwitch(update);
+            send(message);
+
+        } else if (update.getMessage().getText().startsWith("/setting")) {
+            var menuButtons = botService.openMenu(update);
+            send(menuButtons);
+
+        } else {
+            addMessageToContext(
+                update.getMessage().getChat().getId(),
+                update.getMessage().getFrom().getFirstName() + " "
+                    + update.getMessage().getFrom().getLastName(),
+                update.getMessage().getText()
+            );
+            var answer = botService.answerMessage(update, dialogContext);
+            sendAnswer(update, answer);
+        }
     }
 
-    private void send(Update update, SendMessage answer) {
+    private void send(SendMessage answer) {
+        if (answer != null) {
+            try {
+                sendApiMethod(answer);
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void sendAnswer(Update update, SendMessage answer) {
         if (answer != null) {
             try {
                 sendApiMethod(answer);

@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public class BotService {
     @Value("${openai.conditions.chance}")
     private double randomChance;
 
-    public SendMessage handle(Update update, LinkedList<DialogMessage> dialogContext) {
+    public SendMessage answerMessage(Update update, ArrayList<DialogMessage> dialogContext) {
         if (update == null || update.getMessage() == null || update.getMessage().getText() == null) {
             return null;
         }
@@ -50,5 +53,74 @@ public class BotService {
 
         log.info("ПРОПУСК");
         return null;
+    }
+
+    public SendMessage menuSwitch(Update update) {
+        var data = update.getCallbackQuery().getData();
+
+        switch (data) {
+            case "Отключить комментарии бота" -> {
+                randomChance = 0;
+                return SendMessage.builder()
+                    .text("Комментарии отключены.")
+                    .chatId(update.getCallbackQuery().getMessage().getChat().getId())
+                    .build();
+            }
+            case "Дать боту кофе" -> {
+                gptService.setWorkCondition();
+                randomChance = 0.03;
+                return SendMessage.builder()
+                    .text("Другое дело...")
+                    .chatId(update.getCallbackQuery().getMessage().getChat().getId())
+                    .build();
+            }
+            case "Настройки по умолчанию" -> {
+                gptService.setDefaultCondition();
+                randomChance = 0.03;
+                return SendMessage.builder()
+                    .text("Мои настройки сброшены.")
+                    .chatId(update.getCallbackQuery().getMessage().getChat().getId())
+                    .build();
+            }
+        }
+        return null;
+    }
+
+    public SendMessage openMenu(Update update) {
+
+        return SendMessage.builder()
+            .chatId(update.getMessage().getChatId())
+            .text("Menu")
+            .replyMarkup(initKeyboard())
+            .build();
+    }
+
+    private InlineKeyboardMarkup initKeyboard() {
+        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        var buttonsRow1 = new ArrayList<InlineKeyboardButton>();
+        var buttonsRow2 = new ArrayList<InlineKeyboardButton>();
+        var buttonsRow3 = new ArrayList<InlineKeyboardButton>();
+
+        buttonsRow1.add(InlineKeyboardButton.builder()
+            .text("Отключить комментарии бота")
+            .callbackData("Отключить комментарии бота")
+            .build());
+        buttonsRow2.add(InlineKeyboardButton.builder()
+            .text("Дать боту кофе")
+            .callbackData("Дать боту кофе")
+            .build());
+        buttonsRow3.add(InlineKeyboardButton.builder()
+            .text("Настройки по умолчанию")
+            .callbackData("Настройки по умолчанию")
+            .build());
+
+        List<List<InlineKeyboardButton>> keyboardRows = new ArrayList<>();
+        keyboardRows.add(buttonsRow1);
+        keyboardRows.add(buttonsRow2);
+        keyboardRows.add(buttonsRow3);
+
+        inlineKeyboardMarkup.setKeyboard(keyboardRows);
+
+        return inlineKeyboardMarkup;
     }
 }
