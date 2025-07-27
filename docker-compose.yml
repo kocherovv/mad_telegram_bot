@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mad-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_REDIS_PORT=${SPRING_REDIS_PORT}
+      - SPRING_REDIS_HOST=${SPRING_REDIS_HOST}
+      - SPRING_REDIS_PASSWORD=${SPRING_REDIS_PASSWORD}
+      - BOT_NAME=${BOT_NAME}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_USERNAME=${BOT_USERNAME}
+      - BOT_ANSWER_CHANCE=${BOT_ANSWER_CHANCE}
+      - OPENAI_KEY=${OPENAI_KEY}
+    depends_on:
+      - redis
+    restart: always
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    restart: always
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./data:/data
+
+volumes:
+  cache:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge

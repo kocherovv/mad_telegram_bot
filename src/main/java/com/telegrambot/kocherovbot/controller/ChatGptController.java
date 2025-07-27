@@ -1,8 +1,9 @@
 package com.telegrambot.kocherovbot.controller;
 
-import com.telegrambot.kocherovbot.domen.GptMessage;
-import com.telegrambot.kocherovbot.dto.GptRequest;
-import com.telegrambot.kocherovbot.dto.GptResponse;
+import com.telegrambot.kocherovbot.models.GptMessage;
+import com.telegrambot.kocherovbot.models.dto.GptRequest;
+import com.telegrambot.kocherovbot.models.dto.GptResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class ChatGptController {
     private String apiUrl;
 
     @GetMapping("/chat")
-    public String chat(@RequestParam String prompt) {
+    public String getGptAnswer(@RequestParam String prompt) {
         var messages = new ArrayList<GptMessage>();
         messages.add(GptMessage.builder()
             .role("user")
@@ -37,6 +38,7 @@ public class ChatGptController {
             .model(model)
             .messages(messages)
             .build();
+
         var response = restTemplate.postForObject(apiUrl, request, GptResponse.class);
 
         if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {

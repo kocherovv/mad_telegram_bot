@@ -1,6 +1,6 @@
-package com.telegrambot.kocherovbot.dto;
+package com.telegrambot.kocherovbot.models.dto;
 
-import com.telegrambot.kocherovbot.domen.GptMessage;
+import com.telegrambot.kocherovbot.models.GptMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

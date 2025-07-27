@@ -1,4 +1,4 @@
-package com.telegrambot.kocherovbot.domen;
+package com.telegrambot.kocherovbot.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
